@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import demo, admin01, mypdf, deletpage, merge_pdfs, pdf_to_word, word_to_pdf
+from .views import demo, admin01, mypdf, deletpage, merge_pdfs, pdf_to_word, word_to_pdf,home
 
 urlpatterns = [
     path('', home),
