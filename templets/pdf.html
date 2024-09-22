@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI PDF Tools</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        /* Navbar styling */
+        .navbar {
+            background-color: #333;
+            overflow: hidden;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        /* Navbar links */
+        .navbar a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Change background on hover */
+        .navbar a:hover {
+            background-color: #04AA6D;
+            color: white;
+        }
+
+        /* Active page link */
+        .navbar a.active {
+            background-color: #04AA6D;
+            color: white;
+        }
+
+        /* Style for page content */
+        .content {
+            padding: 20px;
+            text-align: center;
+            display: none; /* Hide content sections initially */
+        }
+
+        /* Hamburger menu for mobile */
+        .navbar .icon {
+            display: none;
+        }
+
+        /* Responsive styling */
+        @media screen and (max-width: 768px) {
+            .navbar a {
+                display: none;
+            }
+
+            .navbar a.icon {
+                float: right;
+                display: block;
+                padding: 14px 20px;
+                font-size: 20px;
+            }
+
+            /* Show the menu when clicked */
+            .navbar.responsive {
+                position: relative;
+            }
+
+            .navbar.responsive a.icon {
+                position: absolute;
+                right: 0;
+                top: 0;
+            }
+
+            .navbar.responsive a {
+                display: block;
+                float: none;
+                text-align: left;
+                background-color: #333;
+            }
+        }
+
+        /* Button animations */
+        .navbar a {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .navbar a::before {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background-color: #04AA6D;
+            transition: all 0.4s ease;
+            z-index: -1;
+            transform: translateX(-50%);
+        }
+
+        .navbar a:hover::before {
+            top: 0;
+        }
+
+        /* Smooth scroll effect */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Show sections */
+        .content.active {
+            display: block;
+        }
+
+        /* Input styling */
+        input[type="file"], input[type="text"] {
+            padding: 10px;
+            margin: 10px 0;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        button {
+            background-color: #04AA6D;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <div class="navbar" id="navbar">
+        <a href="#" class="active" onclick="showContent('home')">Home</a>
+        <a href="#" onclick="showContent('deletePDF')">Delete Page from PDF</a>
+        <a href="#" onclick="showContent('mergePDF')">Merge PDF</a>
+        <a href="#" onclick="showContent('pdfToWord')">PDF to Word</a>
+        <a href="#" onclick="showContent('wordToPdf')">Word to PDF</a>
+        <a href="#" onclick="showContent('imageEnhancer')">Image Enhancer (AI)</a>
+        <a href="javascript:void(0);" class="icon" onclick="toggleNavbar()">&#9776;</a>
+    </div>
+
+    <!-- Main Content Area -->
+    <div id="home" class="content active">
+        <h1>Welcome to AI PDF Tools</h1>
+        <p>Select a tool from the navigation bar above to start using the service.</p>
+    </div>
+
+    <!-- Delete Page from PDF -->
+    <div id="deletePDF" class="content">
+        {% csrf_token %}
+        <h1>Delete Page from PDF</h1>
+        <form method="POST" enctype="multipart/form-data" action="{% url 'deletpage' %}">
+            {% csrf_token %}
+            <input type="file" name="uploadPDF" accept="application/pdf">
+            <input type="text" name="pages" placeholder="Enter page numbers to keep (e.g., 1,2,5)">
+            <button type="submit">Delete Pages</button>
+        </form>
+    </div>
+
+    <!-- Merge PDF -->
+    <div id="mergePDF" class="content">
+        <h1>Merge PDFs</h1>
+        <form method="POST" enctype="multipart/form-data" action="{% url 'merge_pdfs' %}">
+            {% csrf_token %}
+            <input type="file" name="pdf1" accept="application/pdf">
+            <input type="file" name="pdf2" accept="application/pdf">
+            <button type="submit">Merge PDFs</button>
+        </form>
+    </div>
+
+    <!-- PDF to Word -->
+    <div id="pdfToWord" class="content">
+        <h1>Convert PDF to Word</h1>
+        <form method="POST" enctype="multipart/form-data" action="{% url 'pdf_to_word' %}">
+            {% csrf_token %}
+            <input type="file" name="uploadPDF" accept="application/pdf">
+            <button type="submit">Convert to Word</button>
+        </form>
+    </div>
+
+    <!-- Word to PDF -->
+    <div id="wordToPdf" class="content">
+        <h1>Convert Word to PDF</h1>
+        <form method="POST" enctype="multipart/form-data" action="{% url 'word_to_pdf' %}">
+            {% csrf_token %}
+            <input type="file" name="uploadWord" accept=".doc,.docx">
+            <button type="submit">Convert to PDF</button>
+        </form>
+    </div>
+
+
+
+
+    <script>
+        // Function to show selected content and hide others
+        function showContent(sectionId) {
+            // Hide all content sections
+            var contents = document.getElementsByClassName('content');
+            for (var i = 0; i < contents.length; i++) {
+                contents[i].classList.remove('active');
+            }
+
+            // Show the selected section
+            var section = document.getElementById(sectionId);
+            section.classList.add('active');
+
+            // Remove 'active' class from all navbar links
+            var links = document.querySelectorAll('.navbar a');
+            links.forEach(link => link.classList.remove('active'));
+
+            // Add 'active' class to the clicked link
+            var clickedLink = document.querySelector(`a[onclick="showContent('${sectionId}')"]`);
+            clickedLink.classList.add('active');
+        }
+
+        // Toggle between adding and removing the "responsive" class to navbar when the user clicks on the icon
+        function toggleNavbar() {
+            var x = document.getElementById("navbar");
+            if (x.className === "navbar") {
+                x.className += " responsive";
+            } else {
+                x.className = "navbar";
+            }
+        }
+    </script>
+
+</body>
+</html>

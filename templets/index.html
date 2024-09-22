@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collapsible Topics and Subtopics</title>
+    <style>
+            /* General Styles */
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                margin: 0;
+                padding: 0;
+                background: linear-gradient(135deg, #f0f4f8, #e2e8f0);
+                color: #333;
+            }
+
+            /* Navigation Styles */
+            nav {
+                background: #1a73e8; /* Blue */
+                padding: 10px 20px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                position: sticky;
+                top: 0;
+                z-index: 1000;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            nav ul {
+                list-style-type: none;
+                padding: 0;
+                margin: 0;
+                display: flex;
+                align-items: center;
+            }
+            nav ul li {
+                margin: 0 20px;
+            }
+            nav ul li a {
+                color: white;
+                text-decoration: none;
+                font-weight: 600;
+                font-size: 18px;
+                padding: 8px 16px;
+                border-radius: 4px;
+                transition: background-color 0.3s, color 0.3s;
+            }
+            nav ul li a:hover {
+                background-color: #f0f4f8;
+                color: #1a73e8;
+            }
+
+            /* Search Bar Styles */
+            #searchBar {
+                padding: 8px 16px;
+                width: 250px;
+                border: 1px solid #ddd;
+                border-radius: 50px;
+                font-size: 16px;
+                outline: none;
+                transition: border-color 0.3s;
+            }
+            #searchBar:focus {
+                border-color: #1a73e8;
+                box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3);
+            }
+
+            /* Layout for Topics and Description */
+            .main-container {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                padding: 20px;
+            }
+
+            /* Sidebar for Topics */
+            .sidebar {
+                flex: 1;
+                max-width: 300px;
+                margin-right: 20px;
+                background-color: #ffffff;
+                padding: 20px;
+                border-radius: 12px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+
+            /* Content and Topic Styles */
+            .content {
+                display: none;
+                margin-bottom: 20px;
+                padding: 20px;
+                background-color: white;
+                border-radius: 12px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                animation: fadeIn 0.5s ease-in-out;
+            }
+            .content h3 {
+                margin-top: 0;
+                color: #1a73e8;
+                border-bottom: 2px solid #f0f4f8;
+                padding-bottom: 10px;
+            }
+            .topic {
+                cursor: pointer;
+                font-weight: bold;
+                margin-bottom: 10px;
+                padding: 14px;
+                background-color: #e3f2fd;
+                border-radius: 8px;
+                transition: transform 0.3s, background-color 0.3s;
+                list-style-type: disc;
+                padding-left: 20px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            .topic:hover {
+                background-color: #bbdefb;
+                transform: translateY(-2px);
+            }
+            .subtopics {
+                display: none;
+                margin-left: 20px;
+            }
+            .subtopic {
+                cursor: pointer;
+                margin-bottom: 8px;
+                padding: 10px;
+                background-color: #e8eaf6;
+                border-radius: 6px;
+                transition: background-color 0.3s, transform 0.3s;
+                list-style-type: none;
+                padding-left: 0;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            }
+            .subtopic:hover {
+                background-color: #c5cae9;
+                text-decoration: underline;
+                transform: translateX(5px);
+            }
+
+            /* Description Section */
+            #description {
+                flex: 2;
+                margin-top: 0;
+                padding: 20px;
+                border: 1px solid #ddd;
+                background-color: #ffffff;
+                border-radius: 12px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                font-size: 16px;
+                line-height: 1.6;
+                color: #444;
+                animation: fadeIn 0.5s ease-in-out;
+            }
+
+            /* Home Content Styles */
+            .home-content {
+                display: none;
+                margin-top: 20px;
+                padding: 20px;
+                background-color: #fdfdfd;
+                border-radius: 10px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                overflow: hidden;
+            }
+            .home-item {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+            .home-item h4 {
+                margin: 0;
+                color: #1a73e8;
+                font-weight: bold;
+            }
+            .home-item p {
+                margin: 0;
+                color: #555;
+            }
+
+            /* Keyframes for Fade-In Animation */
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            /* Responsive Styles */
+            @media (max-width: 768px) {
+                .main-container {
+                    flex-direction: column;
+                    align-items: center;
+                }
+                .sidebar {
+                    max-width: 100%;
+                    margin-right: 0;
+                    margin-bottom: 20px;
+                }
+                #description {
+                    max-width: 100%;
+                }
+                #searchBar {
+                    width: 100%;
+                }
+            }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation with Search Bar -->
+    <nav>
+        <ul>
+            <li><a href="#" onclick="showHomeContent()">Home</a></li>
+            {% for subject in subjects %}
+            <li><a href="#" onclick="showContent('{{ subject.name|slugify }}_content')">{{ subject.name }}</a></li>
+            {% endfor %}
+            <li><a href="{% url 'pdftools' %}" target="_blank" onclick="showHomeContent()">PDF Tools</a></li>
+             <li><a href="{% url 'admin:index' %}" target="_blank" onclick="showHomeContent()">Admin</a></li>
+        </ul>
+        <!-- Search Bar in Navbar -->
+        <input type="text" id="searchBar" placeholder="Search topics or subtopics..." oninput="searchContent()">
+    </nav>
+
+    <!-- Main Layout Container -->
+    <div class="main-container">
+        <!-- Sidebar for Topics -->
+        <div class="sidebar">
+            <div id="homeContent" class="home-content">
+                <h3>Explore Our Topics and Subtopics</h3>
+                <div class="home-item">
+                    <h4>Topic 1</h4>
+                    <p>Subtopic 1.1: Brief description about this subtopic.</p>
+                    <p>Subtopic 1.2: Brief description about this subtopic.</p>
+                </div>
+                <div class="home-item">
+                    <h4>Topic 2</h4>
+                    <p>Subtopic 2.1: Brief description about this subtopic.</p>
+                    <p>Subtopic 2.2: Brief description about this subtopic.</p>
+                </div>
+                <!-- Add more topics and subtopics as needed -->
+            </div>
+            {% for subject in subjects %}
+            <div id="{{ subject.name|slugify }}_content" class="content">
+                <h3>{{ subject.name }} Topics:</h3>
+                {% for topic in subject.topics.all %}
+                <div class="topic" data-topic-name="{{ topic.name }}" onclick="toggleSubtopics('{{ topic.name|slugify }}_subtopics')">{{ topic.name }}</div>
+                <div id="{{ topic.name|slugify }}_subtopics" class="subtopics">
+                    {% for subtopic in topic.subtopics.all %}
+                    <div class="subtopic" data-subtopic-name="{{ subtopic.name }}" onclick="toggleDescription('{{ subtopic.name|slugify }}_description', '{{ subtopic.content|escapejs }}')">{{ subtopic.name }}</div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Description Section -->
+        <div id="description"></div>
+    </div>
+
+    <script>
+        let lastOpenedSubtopic = null;
+        let lastOpenedDescription = null;
+
+        // Function to show home content with mixed topics and subtopics
+        function showHomeContent() {
+            // Hide other content sections
+            document.querySelectorAll('.content').forEach(content => content.style.display = 'none');
+            // Show the home content section
+            document.getElementById('homeContent').style.display = 'block';
+            resetPage();
+        }
+
+        // Function to show content for the clicked subject
+        function showContent(contentId) {
+            var contents = document.querySelectorAll('.content');
+            contents.forEach(function(content) {
+                content.style.display = 'none';
+            });
+
+            // Hide home content when a specific topic is selected
+            document.getElementById('homeContent').style.display = 'none';
+
+            var content = document.getElementById(contentId);
+            content.style.display = 'block';
+
+            resetPage();
+        }
+
+        // Function to show or hide subtopics when a topic is clicked
+        function toggleSubtopics(subtopicId) {
+            var subtopics = document.getElementById(subtopicId);
+            subtopics.style.display = (subtopics.style.display === "none" || subtopics.style.display === "") ? "block" : "none";
+        }
+
+        // Function to toggle description of subtopic
+        function toggleDescription(subtopicId, description) {
+            var descriptionDiv = document.getElementById('description');
+            var subtopicElement = document.getElementById(subtopicId);
+
+            if (lastOpenedDescription === description) {
+                descriptionDiv.innerHTML = '';
+                lastOpenedDescription = null;
+            } else {
+                descriptionDiv.innerHTML = description;
+                lastOpenedDescription = description;
+            }
+
+            if (lastOpenedSubtopic && lastOpenedSubtopic !== subtopicElement) {
+                lastOpenedSubtopic.style.display = 'none';
+            }
+
+            subtopicElement.style.display = (subtopicElement.style.display === "none" || subtopicElement.style.display === "") ? "block" : "none";
+            lastOpenedSubtopic = subtopicElement;
+        }
+
+        // Function to reset the page when a new subject is selected
+        function resetPage() {
+            document.getElementById('description').innerHTML = '';
+        }
+
+        // Function to filter and search content
+        function searchContent() {
+            var searchTerm = document.getElementById('searchBar').value.toLowerCase();
+            var topics = document.querySelectorAll('.topic, .subtopic');
+
+            topics.forEach(function(topic) {
+                var topicName = topic.dataset.topicName || topic.dataset.subtopicName;
+                topic.style.display = topicName.toLowerCase().includes(searchTerm) ? 'block' : 'none';
+            });
+        }
+    </script>
+</body>
+</html>
