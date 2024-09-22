@@ -16,8 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-
+from WebSite import views  # Import the views from your app
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('Tutorial/', include('WebSite.urls')),
+    path('', views.home),
+    path('', lambda request: redirect('WebSite/demo/', permanent=True)),
 ]
