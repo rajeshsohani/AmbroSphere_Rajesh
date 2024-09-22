@@ -25,8 +25,8 @@ SECRET_KEY = 'django-insecure-4$#+ljvlr7t*9$@n_te!-dn&e(mng^!jd_fq5=(1rlhlovsose
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['ambrosphere_rajesh.onrender.com']
-
+ALLOWED_HOSTS = ['ambrosphere_rajesh.onrender.com',]
+ALLOWED_HOSTS = ['ambrosphere_rajesh.onrender.com', 'localhost', '127.0.0.1']
 
 # Application definition
 
