@@ -8,11 +8,9 @@ from docx import Document
 from docx import Document
 # Create your views here.
 def home(request):
-    # Uncomment this if you plan to render a template
-    # return render(request, 'home.html', {})
-    #return HttpResponse("Hi there, this is a Django response")
-    subjects = SubjectModel.objects.all()
-    return render(request,'index.html',{'subjects': subjects})
+    #subjects = SubjectModel.objects.all()
+    #return render(request,'index.html',{'subjects': subjects})
+    return render(request,'index.html',{})
 
 def demo(request):
     # Uncomment this if you plan to render a template
